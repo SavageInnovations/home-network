@@ -36,15 +36,11 @@ Complete these **before** starting the migration.
 
 ## Migration Phases
 
-### Phase 0 — Reduce DHCP Lease Time
-**Risk**: None  
-**Duration**: 5 minutes (then wait ~2 hours for leases to cycle)
+### Note on DHCP Lease Time
 
-> Shortening the lease time means devices will pick up new settings faster after changes.
+The Deco does not expose a DHCP lease time setting (app or web UI). The default lease is **120 minutes (2 hours)**. This means after creating a reservation, devices won't automatically pick up the new IP until their current lease expires.
 
-- [ ] In Deco admin, reduce DHCP lease time to **5 minutes** (or shortest available)
-- [ ] Note the original lease time: `________` (to restore later)
-- [ ] Wait for existing leases to expire (ideally do this the evening before)
+**Workaround**: After creating each DHCP reservation, **reboot/power-cycle the device** to force an immediate DHCP renewal. This is already built into each phase below. For WiFi devices, toggling WiFi off/on also works.
 
 ---
 
@@ -285,7 +281,6 @@ Doorbell still online? Y/N:
 **Risk**: None  
 **Duration**: 15 minutes
 
-- [ ] Restore DHCP lease time to original value: `________`
 - [ ] Run a new nmap scan to verify all devices on expected IPs
 - [ ] Walk through each room and test key functions:
   - [ ] **Study**: HA dashboard loads, printer prints, Yealink rings
