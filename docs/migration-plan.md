@@ -20,14 +20,17 @@ Complete these **before** starting the migration.
 - [ ] Document current Hikvision network settings (web admin for each device)
 - [ ] Save a copy of HA's `configuration.yaml` and any relevant automation files
 
-### Confirm Before Starting
-- [ ] **CONFIRM**: How are Shelly IPs currently assigned? (static on device / DHCP reservation on router)
-- [ ] **CONFIRM**: Can the Deco gateway IP be changed to .1? (check Deco app/admin)
-- [ ] **CONFIRM**: Can Deco mesh node IPs be manually reserved? (or does Deco manage internally)
-- [ ] **CONFIRM**: Is HA accessible via Nabu Casa cloud? (useful as fallback during migration)
+### Confirmed
+- [x] **Shelly IPs**: DHCP without reservations — create reservations on Deco, reboot Shellys to pick up new IPs
+- [x] **Deco gateway IP**: Can be changed via Deco app → More → Advanced → LAN IP
+- [x] **DHCP reservations**: Supported via Deco app → More → Advanced → Address Reservation
+- [x] **HA remote access**: Yes, via Nabu Casa cloud (fallback during migration)
+
+### Before Starting
 - [ ] All household members informed of potential WiFi/smart home disruption
 - [ ] Phone charged (you'll need the Deco app)
 - [ ] Have a wired ethernet connection available to the gateway if possible (fallback access)
+- [ ] Deco app open and logged in
 
 ---
 
@@ -52,16 +55,12 @@ Complete these **before** starting the migration.
 
 > This is the most impactful single change. All devices currently know the gateway as .254.
 
-- [ ] Change Deco X50-5G gateway IP from `.254` → `.1`
+- [ ] Change Deco X50-5G gateway IP from `.254` → `.1` (Deco app → More → Advanced → LAN IP)
 - [ ] Update DHCP server to advertise `.1` as gateway
 - [ ] Verify the Deco app still connects
 - [ ] Verify internet access from your phone
 - [ ] Verify internet access from a computer
 - [ ] Note any devices that lost connectivity (may need reboot to pick up new gateway)
-
-**If Deco doesn't allow changing gateway IP to .1:**
-- [ ] Use `.10` or another address in the infrastructure range
-- [ ] Update the DHCP scheme documentation accordingly
 
 **Post-step notes:**
 ```
