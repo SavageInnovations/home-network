@@ -50,11 +50,10 @@ All addresses are `192.168.1.x` — shorthand `.x` used for readability.
 | IP | Device | MAC | Location |
 |---|---|---|---|
 | .1 | Deco X50-5G Gateway | 8C:86:DD:12:69:30 | Study |
-| .2 | Deco PX50 Mesh Node | 9C:53:22:83:F5:B0 | Living Room |
-| .3 | Deco PX50 Mesh Node | F0:A7:31:1F:69:93 | Porch |
-| .4 | Deco PX50 Mesh Node | F0:A7:31:1F:68:9E | Office |
-| .5 | Deco PX50 Mesh Node | 9C:53:22:84:03:57 | Study |
+| .2–.5 | *(Reserved — Deco manages mesh node IPs internally, see note below)* | | |
 | .6–.19 | *(Future: managed switch, PoE switch, DNS/Pi-hole, firewall)* | | |
+
+> **Note**: Deco PX50 mesh nodes are assigned IPs by the Deco system in the .247–.250 range and cannot be reserved via the Deco app. Their IP-to-location mapping may shuffle between reboots. Current observed IPs: .247 (Porch), .248 (Study), .249 (Office), .250 (Living Room).
 
 ### Smart Home Core (.20–.29)
 
@@ -73,6 +72,8 @@ All addresses are `192.168.1.x` — shorthand `.x` used for readability.
 | .31 | Hikvision Indoor Station (Lounge) | 14:F5:F9:B9:BA:CC | Living Room |
 | .32 | Hikvision Indoor Station (Office) | 14:F5:F9:E8:D7:11 | Office |
 | .33–.39 | *(Future: cameras, NVR, motion sensors)* | | |
+
+> **Note**: Indoor stations (DS-KH6320-WTE1) do not support DHCP — IPs are configured as static on the device. DHCP reservations exist on the Deco as placeholders but the devices use static configuration. Door station uses DHCP with reservation.
 
 ### Communications & Office (.40–.49)
 

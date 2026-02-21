@@ -1,8 +1,8 @@
 # Network Migration Plan
 
-**Status**: 🔧 In Progress  
-**Planned Date**: 21 February 2026  
-**Estimated Duration**: 3–4 hours  
+**Status**: 🔧 In Progress (Day 1 complete — punch list remains)  
+**Started**: 21 February 2026  
+**Estimated Duration**: 3–4 hours (Day 1) + punch list session (Day 2)  
 **Risk Level**: Medium (temporary loss of smart home control during migration)
 
 ---
@@ -60,8 +60,8 @@ The Deco does not expose a DHCP lease time setting (app or web UI). The default 
 
 **Post-step notes:**
 ```
-Gateway moved to: .___
-Any issues:
+Gateway moved to: .1 ✅
+Any issues: None — clean cutover. All devices picked up new gateway.
 ```
 
 ---
@@ -79,8 +79,10 @@ Any issues:
 
 **Post-step notes:**
 ```
-Mesh nodes at: .___  .___  .___  .___
-Deco manages internally? Y/N:
+Mesh nodes at: .247 (Porch) .248 (Study→LR) .249 (Office→Porch) .250 (LR→Office)
+Note: Mesh node MACs shuffle between reboots. IPs are Deco-managed, top of range.
+Deco manages internally? Y — cannot reserve mesh node IPs via Deco app.
+DHCP pool changed from 50-250 to 20-250 to accommodate low-range reservations.
 ```
 
 ---
@@ -116,9 +118,13 @@ Deco manages internally? Y/N:
 
 **Post-step notes:**
 ```
-HA accessible at .20? Y/N:
-Nabu Casa working? Y/N:
-Integrations needing update:
+HA accessible at .20? Y ✅ (required full OS reboot, not just HA restart)
+Nabu Casa working? Y ✅
+HA Voice Preview: required power cycle + clearing a Shelly squatter from .21
+Octopus Mini: landed on .22 after router reboot ✅
+Integrations needing update: Local Tuya (dehumidifier) — hardcoded old IP .67
+Key learning: Deco reservations only take effect after router reboot, not immediately.
+Key learning: HA "restart" is app-level only; "reboot" cycles the OS and forces DHCP renewal.
 ```
 
 ---
@@ -143,9 +149,12 @@ Integrations needing update:
 
 **Post-step notes:**
 ```
-Doorbell working? Y/N:
-Indoor stations linked? Y/N:
-HA camera feed working? Y/N:
+Doorbell working? Y ✅ — DHCP reservation worked cleanly
+Indoor stations linked? Y ✅ — but required manual static IP change (no DHCP option on indoor stations)
+HA camera feed working? TBC — check in punch list
+Indoor stations: gateway updated from .200 (wrong!) to .1 ✅
+Key learning: Hikvision indoor stations (DS-KH6320-WTE1) do NOT support DHCP — static only.
+Key learning: Indoor stations were on old gateway .200 — worked for local intercom but no internet.
 ```
 
 ---
@@ -165,9 +174,9 @@ HA camera feed working? Y/N:
 
 **Post-step notes:**
 ```
-VoIP working? Y/N:
-Printer working? Y/N:
-Printer unnecessary services disabled? Y/N:
+VoIP working? Y ✅ — landed on .40 after reservation + router reboot
+Printer working? Y ✅ — landed on .41
+Printer unnecessary services disabled? N — deferred to punch list
 ```
 
 ---
@@ -189,10 +198,12 @@ Printer unnecessary services disabled? Y/N:
 
 **Post-step notes:**
 ```
-Sony Bravia in HA? Y/N:
-Sonos playing? Y/N:
-Samsung Bedroom in HA? Y/N:
-Samsung Kitchen MAC fixed? Y/N:
+Sony Bravia in HA? TBC — verify in punch list
+Sonos playing? TBC — verify in punch list
+Samsung Bedroom in HA? N — TV offline, deferred to punch list
+Samsung Kitchen MAC fixed? N — deferred to punch list
+Sky Puck: offline, deferred
+PS4: offline, deferred
 ```
 
 ---
@@ -215,10 +226,10 @@ Samsung Kitchen MAC fixed? Y/N:
 
 **Post-step notes:**
 ```
-Immersion controllable? Y/N:
-UFH controller online? Y/N:
-Dehumidifier in HA? Y/N:
-Towel rail in HA? Y/N:
+Immersion controllable? TBC — verify in punch list (.60 confirmed on network)
+UFH controller online? TBC — verify in punch list (.62 confirmed on network)
+Dehumidifier in HA? N — Local Tuya integration had hardcoded IP .67, updated to .63 but still offline. Investigate.
+Towel rail in HA? TBC — verify in punch list (.64 confirmed on network)
 ```
 
 ---
@@ -237,8 +248,9 @@ Towel rail in HA? Y/N:
 
 **Post-step notes:**
 ```
-All lights controllable from HA? Y/N:
-Porch Shelly firmware updated? Y/N:
+All lights controllable from HA? TBC — all on correct IPs per nmap, verify in punch list
+Porch Shelly firmware updated? N — deferred to punch list (currently on beta 1.7.99)
+All 5 devices confirmed at target IPs: .80 .81 .82 .83 .84 ✅
 ```
 
 ---
@@ -259,10 +271,11 @@ Porch Shelly firmware updated? Y/N:
 
 **Post-step notes:**
 ```
-All strips in HA? Y/N:
-Critical outlets locked? Y/N:
-Mesh node still online? Y/N:
-Doorbell still online? Y/N:
+All strips in HA? TBC — verify in punch list
+Critical outlets locked? N — deferred to punch list
+Mesh node still online? Y ✅
+Doorbell still online? Y ✅
+All 4 devices confirmed at target IPs: .110 .111 .112 .113 ✅
 ```
 
 ---
@@ -274,6 +287,12 @@ Doorbell still online? Y/N:
 - [ ] Move Shelly Clocktower Motor: `.56` → `.130`
 - [ ] Move Shelly Christmas Tree Lights: `.79` → `.131`
 - [ ] Verify HA control for both
+
+**Post-step notes:**
+```
+Both devices confirmed at target IPs: .130 .131 ✅
+HA control: TBC — verify in punch list
+```
 
 ---
 
@@ -325,4 +344,15 @@ The most important thing is: **don't panic, don't rush**. Every change is revers
 
 | Date | Phase | Notes |
 |---|---|---|
-| | | |
+| 2026-02-21 | Pre-migration | Backups done. Hikvision indoor stations found on static IPs with wrong gateway (.200). Yealink backup skipped (locked out, not needed). |
+| 2026-02-21 | Phase 1 | Gateway .254 → .1. Clean cutover. |
+| 2026-02-21 | Phase 2 | Mesh nodes Deco-managed at .247-.250. Cannot reserve. DHCP pool changed to 20-250. |
+| 2026-02-21 | Phase 3 | HA → .20, Voice → .21, Octopus → .22. All confirmed. Learned: reservations need router reboot. |
+| 2026-02-21 | Phase 4 | Door station → .30 (DHCP). Indoor stations → .31/.32 (static — no DHCP option). Gateway fixed to .1. |
+| 2026-02-21 | Phase 5 | Yealink → .40, Printer → .41. Printer hardening deferred. |
+| 2026-02-21 | Phase 6 | Sony → .50, Sonos → .51. Samsung TVs, Sky, PS4 deferred (offline). |
+| 2026-02-21 | Phase 7 | All HVAC at target IPs. Dehumidifier Local Tuya integration needs fixing. |
+| 2026-02-21 | Phase 8 | All lighting at target IPs. Porch firmware check deferred. |
+| 2026-02-21 | Phase 9 | All switching at target IPs. Critical outlet locking deferred. |
+| 2026-02-21 | Phase 10 | Clocktower → .130, Christmas → .131. HA control TBC. |
+| 2026-02-21 | Phase 11 | Partial — punch list created for Day 2. |
