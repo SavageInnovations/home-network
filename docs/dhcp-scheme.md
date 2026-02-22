@@ -6,12 +6,12 @@ All addresses are `192.168.1.x` — shorthand `.x` used for readability.
 
 | Range | Function | Slots | Assigned | Available |
 |---|---|---|---|---|
-| .1–.19 | Infrastructure | 19 | 5 | 14 |
-| .20–.29 | Smart Home Core | 10 | 3 | 7 |
+| .1–.19 | Infrastructure | 19 | 6 | 13 |
+| .20–.29 | Smart Home Core | 10 | 4 | 6 |
 | .30–.39 | Security / Intercom | 10 | 3 | 7 |
-| .40–.49 | Communications & Office | 10 | 2 | 8 |
+| .40–.49 | Communications & Office | 10 | 3 | 7 |
 | .50–.59 | AV / Entertainment | 10 | 6 | 4 |
-| .60–.79 | HVAC / Climate | 20 | 5 | 15 |
+| .60–.79 | HVAC / Climate | 20 | 4 | 16 |
 | .80–.109 | Lighting | 30 | 5 | 25 |
 | .110–.129 | Switching / Power | 20 | 4 | 16 |
 | .130–.139 | Miscellaneous / Utility | 10 | 2 | 8 |
@@ -51,7 +51,10 @@ All addresses are `192.168.1.x` — shorthand `.x` used for readability.
 |---|---|---|---|
 | .1 | Deco X50-5G Gateway | 8C:86:DD:12:69:30 | Study |
 | .2–.5 | *(Reserved — Deco manages mesh node IPs internally, see note below)* | | |
-| .6–.19 | *(Future: managed switch, PoE switch, DNS/Pi-hole, firewall)* | | |
+| .6 | Cisco SLM2008 Managed Switch | A4:0C:C3:65:AF:B9 | Study |
+| .7–.19 | *(Future: PoE switch, DNS/Pi-hole, firewall)* | | |
+
+> **Note**: Switch at .6 is configured with a static IP (below DHCP range .20-.250). No Deco reservation needed.
 
 > **Note**: Deco PX50 mesh nodes are assigned IPs by the Deco system in the .247–.250 range and cannot be reserved via the Deco app. Their IP-to-location mapping may shuffle between reboots. Current observed IPs: .247 (Porch), .248 (Study), .249 (Office), .250 (Living Room).
 
@@ -62,7 +65,8 @@ All addresses are `192.168.1.x` — shorthand `.x` used for readability.
 | .20 | Home Assistant | 20:F8:3B:02:16:21 | Study |
 | .21 | HA Voice Preview | 20:F8:3B:0A:3E:CC | Kitchen |
 | .22 | Octopus Energy Mini (CAD) | 78:1C:3C:33:C0:4C | Porch |
-| .23–.29 | *(Future: Zigbee coordinator, Z-Wave, voice satellites)* | | |
+| .23 | Android Tablet (HA Lounge Panel) | C8:05:A4:09:9A:9A | Living Room |
+| .24–.29 | *(Future: Zigbee coordinator, Z-Wave, voice satellites)* | | |
 
 ### Security / Intercom (.30–.39)
 
@@ -73,15 +77,18 @@ All addresses are `192.168.1.x` — shorthand `.x` used for readability.
 | .32 | Hikvision Indoor Station (Office) | 14:F5:F9:E8:D7:11 | Office |
 | .33–.39 | *(Future: cameras, NVR, motion sensors)* | | |
 
-> **Note**: Indoor stations (DS-KH6320-WTE1) do not support DHCP — IPs are configured as static on the device. DHCP reservations exist on the Deco as placeholders but the devices use static configuration. Door station uses DHCP with reservation.
+> **Note**: Indoor stations (DS-KH6320-WTE1, firmware V2.2.92) use static IPs configured via SADP tool. DHCP reservations exist on the Deco as placeholders to prevent IP conflicts. Door station uses DHCP with reservation. The intercom chain is: Door Station (.30) → Indoor Lounge (.31, main) → Indoor Office (.32, extension).
 
 ### Communications & Office (.40–.49)
 
 | IP | Device | MAC | Location |
 |---|---|---|---|
 | .40 | Yealink W70B DECT Base | 24:9A:D8:B4:10:56 | Study |
-| .41 | Brother Printer | 28:56:5A:74:D9:26 | Study |
-| .42–.49 | *(Future: NAS, scanner, DECT handsets)* | | |
+| .41 | Brother DCP-9020CDW Printer (Ethernet) | 30:05:5C:EB:F2:3C | Study |
+| .42 | ASUSTOR AS1102T NAS | 78:72:64:41:69:25 | Study |
+| .43–.49 | *(Future: scanner, DECT handsets)* | | |
+
+> **Note**: Printer moved from WiFi (old MAC 28:56:5A:74:D9:26) to wired ethernet via Cisco switch on Day 2. Update Deco reservation to wired MAC.
 
 ### AV / Entertainment (.50–.59)
 
@@ -90,9 +97,9 @@ All addresses are `192.168.1.x` — shorthand `.x` used for readability.
 | .50 | Sony Bravia Smart TV | 88:C9:E8:77:8D:1F | Living Room |
 | .51 | Sonos Play:5 | 5C:AA:FD:08:B2:6C | Living Room |
 | .52 | Samsung Smart TV (Bedroom) | 74:6D:FA:75:41:B0 | Bedroom |
-| .53 | Samsung Smart TV (Kitchen) | *Disable MAC randomisation first* | Kitchen |
-| .54 | Sky Puck | *Assign when online* | Living Room |
-| .55 | PlayStation 4 | *Assign when online* | Living Room |
+| .53 | Samsung Smart TV (Kitchen) | 00:7D:3B:E7:F6:42 | Kitchen |
+| .54 | Sky Puck | 04:B8:6A:9D:94:BD | Living Room |
+| .55 | PlayStation 4 | 0C:FE:45:68:7B:BB | Living Room |
 | .56–.59 | *(Future: Sonos speakers, streaming devices)* | | |
 
 ### HVAC / Climate (.60–.79)

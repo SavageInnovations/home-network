@@ -7,7 +7,9 @@
 - **Failover**: 5G cellular built into the Deco X50-5G
 
 ### Mesh Network
-- **Router/Gateway**: TP-Link Deco X50-5G (Study) — IP: 192.168.1.1
+- **Router/Gateway**: TP-Link Deco X50-5G (Study) — IP: 192.168.1.1, Firmware: 1.1.1
+- **Managed Switch**: Cisco SLM2008 (Study) — IP: 192.168.1.6 (static), Firmware: 2.0.0.10
+- **NAS**: ASUSTOR AS1102T (Study) — IP: 192.168.1.42
 - **Mesh Nodes**: 4× TP-Link Deco PX50 (IPs Deco-managed, .247–.250 range)
   - Living Room, Porch, Office, Study
   - Backhaul: WiFi + Powerline (hybrid)

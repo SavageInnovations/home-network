@@ -1,263 +1,195 @@
 # Post-Migration Punch List
 
 **Created**: 21 February 2026 (end of Day 1)  
-**Status**: 🔧 Pending — to complete in Day 2 session  
-**Last nmap**: 16:43 UTC, 21 Feb 2026
+**Updated**: 22 February 2026 (end of Day 2)  
+**Status**: 🟡 Near complete — minor items remain  
+**Last nmap**: 18:17 UTC, 22 Feb 2026
 
 ---
 
 ## Summary
 
-Day 1 successfully migrated 28 devices to their target IPs across all functional bands. The core network structure is in place. This punch list covers remaining verification, fixes, and deferred items.
+Day 1 migrated 28 devices to target IPs. Day 2 completed HA integration verification, deferred device migrations, Hikvision ghost IP fix, infrastructure additions (NAS, managed switch), and firmware updates. The network is now fully functional with a small number of housekeeping items remaining.
 
 ---
 
-## Priority 1 — Fix Broken Integrations
+## Completed — Day 2
 
-### 1.1 MeacoDry Dehumidifier (.63) — Local Tuya integration offline
-- **Problem**: Local Tuya integration in HA had hardcoded IP .67 (old address). Updated to .63 but device still showing offline.
-- **Action**: 
-  - [ ] Power cycle the dehumidifier
-  - [ ] Confirm .63 is pingable after power cycle
-  - [ ] Check Tuya/Smart Life app — is device online there?
-  - [ ] In HA: Settings → Devices & Services → Local Tuya → reconfigure with IP .63
-  - [ ] If Local Tuya won't reconnect, try deleting and re-adding the integration
-  - [ ] Verify HA can control the dehumidifier
+### Priority 1 — Fix Broken Integrations
+- [x] **1.2 Hikvision camera feed** — motion detection working ✅
+- [x] **Sony Bravia** — reconfigured with new IP .50, PSK re-validated ✅
+- [x] **Sonos Play:5** — rediscovered after HA restart ✅
 
-### 1.2 Hikvision camera feed in HA
-- **Problem**: Door station moved from .41 → .30. HA Hikvision integration likely still points to old IP.
-- **Action**:
-  - [ ] In HA: Settings → Devices & Services → Hikvision → reconfigure with IP .30
-  - [ ] Verify live camera feed works in HA
-  - [ ] Test doorbell press → notification in HA
+### Priority 2 — Verify All HA Integrations
+- [x] 2.1 Shelly devices (all 7) — all toggled and verified ✅
+- [x] 2.2 Tapo devices (all 5) — all toggled and verified ✅
+- [x] 2.3 Sonoff Immersion (.60) — toggle + power monitoring ✅
+- [x] 2.5 Sony Bravia (.50) — reconfigured, HA control working ✅
+- [x] 2.6 Sonos Play:5 (.51) — needed HA restart to rediscover ✅
+- [x] 2.7 Octopus Energy — cloud API, all good ✅
+- [x] 2.8 Nabu Casa remote access — verified ✅
 
----
+### Priority 3 — Deferred Device Migrations
+- [x] 3.1 Samsung Bedroom TV → .52 (MAC 74:6D:FA:75:41:B0) ✅
+- [x] 3.2 Samsung Kitchen TV → .53 (MAC 00:7D:3B:E7:F6:42) ✅
+- [x] 3.3 Android Tablet → .23 (MAC C8:05:A4:09:9A:9A) ✅
+- [x] 3.4 Sky Puck → .54 (MAC 04:B8:6A:9D:94:BD) ✅
+- [x] 3.5 PS4 → .55 (MAC 0C:FE:45:68:7B:BB) ✅
 
-## Priority 2 — Verify All HA Integrations
+### Priority 4 — Security Hardening
+- [x] 4.1 Printer protocols — already secure, FTP/Telnet/SMTP were off ✅
+- [x] 4.2 Tapo critical outlet locking — removed (low risk on home LAN)
+- [x] 4.3 Hikvision gateway verification — all set to .1 ✅
+- [x] Hikvision ghost IPs — fixed via SADP tool ✅
+- [x] Hikvision firmware updated to V2.2.92 ✅
 
-Walk through each integration in HA (Settings → Devices & Services) and confirm devices are online.
+### Priority 5 — Firmware
+- [x] 5.1 Shelly Porch Lights — updated to 1.7.4 stable ✅
+- [x] 5.2 Deco firmware — updated to 1.1.1 ✅
+- [x] Cisco SLM2008 — already on 2.0.0.10 (latest/final) ✅
 
-### 2.1 Shelly devices (6× 1PM + 1× 2PM)
-- [ ] Cloakroom Light (.80) — toggle on/off from HA
-- [ ] Landing Lights (.81) — toggle on/off from HA
-- [ ] Loft Lights (.82) — toggle on/off from HA
-- [ ] Porch Lights Int/Ext (.83) — toggle both channels from HA
-- [ ] Heated Towel Rail (.64) — toggle + verify power monitoring in HA
-- [ ] Clocktower Motor (.130) — toggle from HA
-- [ ] Christmas Tree (.131) — toggle from HA (seasonal, may not be connected)
-
-### 2.2 Tapo devices (3× P304M + 1× strip + 1× plug)
-- [ ] AV strip (.110) — check HA control
-- [ ] Gaming strip (.111) — check HA control (⚠ powers Deco mesh node)
-- [ ] Lounge Table strip (.112) — check HA control
-- [ ] Porch strip (.113) — check HA control (⚠ powers doorbell PoE + Octopus Mini)
-- [ ] Lamp plug (.84) — check HA control
-
-### 2.3 Sonoff Immersion Controller (.60)
-- [ ] Verify HA can see it (eWeLink integration)
-- [ ] Test: toggle immersion on/off from HA
-- [ ] Confirm power monitoring working
-
-### 2.4 Tuya UFH Controller (.62)
-- [ ] Verify HA connectivity
-- [ ] Check if this uses Local Tuya or cloud Tuya — may need IP update like dehumidifier
-
-### 2.5 Sony Bravia (.50)
-- [ ] Verify HA integration reconnected
-- [ ] Test: turn TV on/off from HA
-
-### 2.6 Sonos Play:5 (.51)
-- [ ] Verify plays audio
-- [ ] Check Sonos app recognises speaker
-
-### 2.7 Octopus Energy
-- [ ] Verify energy data still flowing in HA (API/cloud — should be fine)
-
-### 2.8 Nabu Casa remote access
-- [ ] Verify remote access works from phone (off WiFi)
+### Additional Day 2 Completions
+- [x] Door station reservation recreated (.30) — had been lost ✅
+- [x] NAS deployed → .42 (ASUSTOR AS1102T) ✅
+- [x] Cisco SLM2008 switch deployed → .6 (static) ✅
+- [x] Printer moved to ethernet (new MAC 30:05:5C:EB:F2:3C) ✅
+- [x] Yealink web admin access restored, password changed, config backed up ✅
 
 ---
 
-## Priority 3 — Deferred Device Migrations
+## Remaining Items
 
-These devices were offline during Day 1 and need reservations + setup when available.
+### Dehumidifier — Local Tuya / Smart Life
+- **Problem**: Device is on Smart Life app, not Tuya Smart. Local Tuya integration in HA only sees the thermostat (UFH controller on Tuya Smart account).
+- **Options**:
+  - [ ] Link Smart Life account to Local Tuya integration
+  - [ ] Or move dehumidifier to Tuya Smart account
+  - [ ] Or use Smart Life integration in HA instead
+  - [ ] Verify HA can control dehumidifier after fix
 
-### 3.1 Samsung Bedroom TV → .52
-- **MAC**: 74:6D:FA:75:41:B0
-- [ ] Power on TV
-- [ ] Reservation already created — verify it picks up .52
-- [ ] Verify HA Samsung integration reconnects
+### Tuya UFH Controller (.62)
+- [ ] Review configuration — may need Local Tuya IP update
+- [ ] Defer to underfloor heating project (planned 2026)
 
-### 3.2 Samsung Kitchen TV → .53
-- **MAC**: Currently randomised (BD:DF:58:3B:B3:3B seen previously)
-- [ ] Disable MAC randomisation on TV: Settings → Network → disable Private WiFi / random MAC
-- [ ] Note the real MAC address
-- [ ] Create DHCP reservation for .53
-- [ ] Verify HA integration
+### Loft Lights Reservation (.82)
+- **Problem**: Shelly Loft Lights (E4:B0:63:7E:59:24) appearing at .24 instead of .82
+- [ ] Check Deco reservation is intact for this MAC → .82
+- [ ] Power cycle the Shelly to force DHCP renewal
 
-### 3.3 Android Tablet (HA Lounge Panel) 
-- **Current IP**: .27 (floating in DHCP)
-- [ ] Disable MAC randomisation on tablet
-- [ ] Note real MAC address
-- [ ] Decide target IP — suggest .23 (Smart Home Core range, as it's an HA panel)
-- [ ] Create DHCP reservation
-- [ ] Verify HA dashboard loads on tablet
+### Printer Deco Reservation
+- [ ] Update .41 reservation from old WiFi MAC (28:56:5A:74:D9:26) to wired MAC (30:05:5C:EB:F2:3C)
+- [ ] Disable WiFi on the printer
 
-### 3.4 Sky Puck → .54
-- [ ] Power on when convenient
-- [ ] Note MAC address
-- [ ] Create DHCP reservation for .54
-
-### 3.5 PlayStation 4 → .55
-- [ ] Power on when convenient
-- [ ] Note MAC address
-- [ ] Create DHCP reservation for .55
-
----
-
-## Priority 4 — Security Hardening
-
-### 4.1 Brother Printer (.41) — disable unnecessary services
-- [ ] Browse to `http://192.168.1.41`
-- [ ] Disable FTP (port 21)
-- [ ] Disable Telnet (port 23)
-- [ ] Disable SMTP (port 25)
-- [ ] Verify printing still works after changes
-
-### 4.2 Tapo critical outlet locking
-- [ ] In Tapo app: lock the outlet powering Deco mesh node on Gaming strip (.111) to "always on"
-- [ ] In Tapo app: lock the outlets powering doorbell PoE and Octopus Mini on Porch strip (.113) to "always on"
-
-### 4.3 Hikvision indoor station gateway verification
-- [ ] Confirm Lounge station (.31) gateway is set to .1 (was .200)
-- [ ] Confirm Office station (.32) gateway is set to .1 (was .200)
-- [ ] Test intercom: press doorbell → both stations ring
-- [ ] Check Hikvision firmware versions — update if available
-
----
-
-## Priority 5 — Firmware & Maintenance
-
-### 5.1 Shelly Porch Lights (.83) firmware
-- [ ] Currently on beta firmware 1.7.99
-- [ ] Check if stable release available via Shelly web UI at `http://192.168.1.83`
-- [ ] Update if stable version available
-
-### 5.2 Deco firmware
-- [ ] Currently on 1.1.0, update 1.1.1 available
-- [ ] Apply after migration is fully verified and stable
-- [ ] Re-backup Deco config after firmware update
-
----
-
-## Priority 6 — Housekeeping & Documentation
-
-### 6.1 Mystery devices to identify
-- **58:BF:25:46:D6:52** (Espressif) — parked at .150. Possibly backup Sonoff immersion controller?
-  - [ ] Check Shelly/Sonoff web UI at `http://192.168.1.150`
-  - [ ] Identify and assign to correct functional band or decommission
-- **4C:75:25:20:2C:21** — reserved in Deco, unknown origin
+### Mystery Devices
+- **58:BF:25:46:D6:52** (Espressif) at .150 — possibly backup Sonoff immersion
+  - [ ] Check web UI at `http://192.168.1.150`
+  - [ ] Identify and assign to correct band or decommission
+- **4C:75:25:20:2C:21** — reserved in Deco, unknown
   - [ ] Identify or remove reservation
-- **ShellyHTG3 54:32:04:57:B1:D0** and **54:32:04:57:9B:B4** — spotted by IP Scanner
-  - [ ] Identify — temperature/humidity sensors? New purchases?
-  - [ ] Assign to appropriate functional band
+- **ShellyHTG3 x2** (54:32:04:57:B1:D0 and 54:32:04:57:9B:B4) — humidity/temperature sensors
+  - [ ] Get locations from HA
+  - [ ] Assign to HVAC range (.65, .66)
 
-### 6.2 Backfill placeholder reservations
-- [ ] After all devices confirmed, create placeholder reservations across functional ranges to prevent DHCP squatting
-- [ ] This ensures new devices (phones, laptops, guests) always land in the .170-.220 DHCP pool
-- [ ] Suggested approach: reserve unused IPs in .30-.139 range with dummy entries
-
-### 6.3 Update documentation
-- [ ] Update dhcp-scheme.md with actual mesh node IPs (.247-.250, Deco-managed)
-- [ ] Update dhcp-scheme.md to note indoor stations are static (not DHCP reservations)
-- [ ] Update network-overview.md with gateway change (.254 → .1)
-- [ ] Update inventory spreadsheet with all new IPs
-- [ ] Run final nmap scan and save to backups/
-- [ ] Note Deco DHCP pool range change (50-250 → 20-250)
-
-### 6.4 Yealink web admin access
-- [ ] Try default credentials again (admin/admin) after lockout period
-- [ ] If accessible, change default password
-- [ ] Export config as backup
+### Documentation
+- [ ] Update inventory spreadsheet with all final IPs and new devices
+- [ ] Backfill placeholder reservations to prevent DHCP squatting
+- [ ] Consider Hikvision firmware update to latest (V2.2.100 or V2.2.108) when stable
 
 ---
 
-## Final Verification — Room Walkthrough
+## Final Network State (as of 18:17 UTC, 22 Feb 2026)
 
-Once all punch list items are complete, do the Phase 11 room walkthrough:
+### Infrastructure
+| IP | Device | MAC | Type | Status |
+|---|---|---|---|---|
+| .1 | Deco X50-5G Gateway | 8C:86:DD:12:69:30 | DHCP Server | ✅ FW 1.1.1 |
+| .6 | Cisco SLM2008 Switch | A4:0C:C3:65:AF:B9 | Static | ✅ FW 2.0.0.10 |
+| .247-.250 | Deco PX50 Mesh Nodes (×4) | Various | Deco-managed | ✅ |
 
-- [ ] **Study**: HA dashboard loads, printer prints, Yealink rings
-- [ ] **Living Room**: TV turns on via HA, Sonos plays, lights toggle, doorbell indoor station works
-- [ ] **Kitchen**: HA Voice responds, Samsung TV in HA
-- [ ] **Office**: Indoor station rings, wife's PC can print
-- [ ] **Porch**: Porch lights toggle (interior + exterior), doorbell camera live
-- [ ] **Loft**: Landing lights, loft lights toggle, clock motor controllable
-- [ ] **Bathroom**: Towel rail toggles, power monitoring shows in HA
-- [ ] **Cloakroom**: Light toggles
-- [ ] **Upstairs Landing**: Dehumidifier controllable
+### Smart Home Core
+| IP | Device | MAC | Status |
+|---|---|---|---|
+| .20 | Home Assistant | 20:F8:3B:02:16:21 | ✅ |
+| .21 | HA Voice Preview | 20:F8:3B:0A:3E:CC | ✅ |
+| .22 | Octopus Energy Mini | 78:1C:3C:33:C0:4C | ✅ |
+| .23 | Android Tablet (HA Panel) | C8:05:A4:09:9A:9A | ✅ |
+
+### Security
+| IP | Device | MAC | Status |
+|---|---|---|---|
+| .30 | Hikvision Door Station | BC:5E:33:58:B0:07 | ✅ DHCP |
+| .31 | Hikvision Indoor Lounge | 14:F5:F9:B9:BA:CC | ✅ Static via SADP |
+| .32 | Hikvision Indoor Office | 14:F5:F9:E8:D7:11 | ✅ Static via SADP |
+
+### Communications & Office
+| IP | Device | MAC | Status |
+|---|---|---|---|
+| .40 | Yealink W70B | 24:9A:D8:B4:10:56 | ✅ Config backed up |
+| .41 | Brother DCP-9020CDW | 30:05:5C:EB:F2:3C | ✅ Wired ethernet |
+| .42 | ASUSTOR AS1102T NAS | 78:72:64:41:69:25 | ✅ NEW |
+
+### AV / Entertainment
+| IP | Device | MAC | Status |
+|---|---|---|---|
+| .50 | Sony Bravia | 88:C9:E8:77:8D:1F | ✅ HA reconfigured |
+| .51 | Sonos Play:5 | 5C:AA:FD:08:B2:6C | ✅ |
+| .52 | Samsung TV (Bedroom) | 74:6D:FA:75:41:B0 | ✅ |
+| .53 | Samsung TV (Kitchen) | 00:7D:3B:E7:F6:42 | ✅ |
+| .54 | Sky Puck | 04:B8:6A:9D:94:BD | ✅ Reserved |
+| .55 | PlayStation 4 | 0C:FE:45:68:7B:BB | ✅ |
+
+### HVAC / Climate
+| IP | Device | MAC | Status |
+|---|---|---|---|
+| .60 | Sonoff Immersion | E0:5A:1B:6A:9F:40 | ✅ |
+| .62 | Tuya UFH Controller | FC:3C:D7:A1:99:1D | ⚠ Config TBC |
+| .63 | MeacoDry Dehumidifier | 38:A5:C9:A3:E5:AD | ⚠ HA offline |
+| .64 | Shelly Towel Rail | CC:BA:97:EC:0F:A8 | ✅ |
+
+### Lighting
+| IP | Device | MAC | Status |
+|---|---|---|---|
+| .80 | Shelly Cloakroom Light | CC:BA:97:EB:35:04 | ✅ |
+| .81 | Shelly Landing Lights | E4:B0:63:78:DD:C8 | ✅ |
+| .82 | Shelly Loft Lights | E4:B0:63:7E:59:24 | ⚠ At .24, check reservation |
+| .83 | Shelly Porch Lights | E4:B0:63:61:C9:EC | ✅ FW 1.7.4 |
+| .84 | Tapo Lamp Plug | 0C:EF:15:00:18:3B | ✅ |
+
+### Switching / Power
+| IP | Device | MAC | Status |
+|---|---|---|---|
+| .110 | Tapo AV Strip | 0C:EF:15:CA:A6:9E | ✅ |
+| .111 | Tapo Gaming Strip | 0C:EF:15:CA:A6:D4 | ✅ |
+| .112 | Tapo Lounge Table | 0C:EF:15:CA:AE:76 | ✅ |
+| .113 | Tapo Porch Strip | 98:BA:5F:84:2D:41 | ✅ |
+
+### Miscellaneous
+| IP | Device | MAC | Status |
+|---|---|---|---|
+| .130 | Shelly Clocktower Motor | E4:B0:63:7C:AE:10 | ✅ |
+| .131 | Shelly Christmas Tree | A0:85:E3:BC:8B:50 | ✅ |
+| .150 | Unknown Espressif | 58:BF:25:46:D6:52 | ❓ To identify |
 
 ---
 
-## Current Network State (as of 16:43 UTC, 21 Feb 2026)
+## Scorecard
 
-### Devices at target IPs ✅
-| IP | Device | Status |
-|---|---|---|
-| .1 | Deco X50-5G Gateway | ✅ Confirmed |
-| .20 | Home Assistant | ✅ Confirmed |
-| .21 | HA Voice Preview | ✅ Confirmed |
-| .22 | Octopus Energy Mini | ✅ Confirmed |
-| .30 | Hikvision Door Station | ✅ Confirmed |
-| .31 | Hikvision Indoor (Lounge) | ✅ Confirmed (static) |
-| .32 | Hikvision Indoor (Office) | ✅ Confirmed (static) |
-| .40 | Yealink W70B | ✅ Confirmed |
-| .41 | Brother Printer | ✅ Confirmed |
-| .50 | Sony Bravia | ✅ Confirmed |
-| .51 | Sonos Play:5 | ✅ Confirmed |
-| .60 | Sonoff Immersion | ✅ Confirmed |
-| .62 | Tuya UFH Controller | ✅ Confirmed |
-| .63 | MeacoDry Dehumidifier | ✅ On network, HA integration broken |
-| .64 | Shelly Towel Rail | ✅ Confirmed |
-| .80 | Shelly Cloakroom Light | ✅ Confirmed |
-| .81 | Shelly Landing Lights | ✅ Confirmed |
-| .82 | Shelly Loft Lights | ✅ Confirmed |
-| .83 | Shelly Porch Lights | ✅ Confirmed |
-| .84 | Tapo Lamp Plug | ✅ Confirmed |
-| .110 | Tapo AV Strip | ✅ Confirmed |
-| .111 | Tapo Gaming Strip | ✅ Confirmed |
-| .112 | Tapo Lounge Table Strip | ✅ Confirmed |
-| .113 | Tapo Porch Strip | ✅ Confirmed |
-| .130 | Shelly Clocktower Motor | ✅ Confirmed |
-| .131 | Shelly Christmas Tree | ✅ Confirmed |
-
-### Pending placement
-| IP | Device | Notes |
-|---|---|---|
-| .52 | Samsung TV (Bedroom) | Offline — reserve when powered on |
-| .53 | Samsung TV (Kitchen) | Needs MAC randomisation disabled first |
-| .54 | Sky Puck | Offline — reserve when powered on |
-| .55 | PS4 | Offline — reserve when powered on |
-| .150 | Unknown Espressif | Quarantined — identify |
-
-### Mesh nodes (Deco-managed)
-| IP | Location |
+| Metric | Count |
 |---|---|
-| .247 | Porch |
-| .248 | Study/Living Room |
-| .249 | Office/Porch |
-| .250 | Living Room/Office |
-
-*Note: Mesh node IPs and location associations may shuffle between reboots.*
+| Devices at target IPs | 33 |
+| New devices added (Day 2) | 3 (NAS, Switch, Tablet) |
+| HA integrations verified | All except dehumidifier + UFH |
+| Firmware updates completed | 4 (Deco, Porch Shelly, 2× Hikvision indoor) |
+| Remaining items | 7 (minor housekeeping) |
 
 ---
 
-## Key Lessons Learned (Day 1)
+## Key Lessons Learned (Day 2)
 
-1. **Deco DHCP reservations require router reboot** to take effect — not immediate
-2. **Batch approach works well**: create multiple reservations → single router reboot
-3. **Quarantine strategy**: park squatters at .150+ before moving devices to target IPs
-4. **Hikvision indoor stations are static-only** — no DHCP option available
-5. **DHCP pool range matters**: expanding to 20-250 caused devices to squat on reserved IPs initially
-6. **Backfill placeholders** needed post-migration to prevent future squatting
-7. **HA restart ≠ reboot**: restart is app-level, reboot cycles the OS (needed for DHCP renewal)
-8. **Local Tuya uses hardcoded IPs**: must update in HA integration config after IP changes
+1. **Hikvision indoor stations** have a dual-IP bug — WiFi interface grabs DHCP alongside static config. Fixed via SADP tool setting IPs at network interface level.
+2. **SADP tool** is essential for Hikvision device management — iVMS-4200 doesn't expose all network settings.
+3. **NAS IP conflicts** can masquerade as router issues — check for static IP collisions when adding new devices.
+4. **Printer WiFi→Ethernet migration** changes the MAC — update reservations accordingly.
+5. **Cisco SLM2008** is end-of-life at firmware 2.0.0.10 — no further updates available.
+6. **Deco firmware updates** cause full network restart — warn household first.
+7. **Smart Life vs Tuya Smart** are separate ecosystems — Local Tuya integration only sees devices on the linked account.
