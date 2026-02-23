@@ -90,6 +90,13 @@ Day 1 migrated 28 devices to target IPs. Day 2 completed HA integration verifica
   - [ ] Get locations from HA
   - [ ] Assign to HVAC range (.65, .66)
 
+### NAS Home Assistant Integration (.42)
+- [ ] Enable WOL in ASUSTOR ADM (Power > Wake-on-LAN)
+- [ ] Set up HA `wake_on_lan` integration for power-on (MAC 78:72:64:41:69:25)
+- [ ] Set up SSH `shell_command` for graceful shutdown
+- [ ] Add `binary_sensor.ping` for online state detection
+- [ ] Create combined switch entity (WOL on / SSH off / ping state)
+
 ### Documentation
 - [ ] Update inventory spreadsheet with all final IPs and new devices
 - [ ] Backfill placeholder reservations to prevent DHCP squatting
