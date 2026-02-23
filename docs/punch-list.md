@@ -1,7 +1,7 @@
 # Post-Migration Punch List
 
 **Created**: 21 February 2026 (end of Day 1)  
-**Updated**: 22 February 2026 (end of Day 2)  
+**Updated**: 23 February 2026 (Day 3 session)  
 **Status**: 🟡 Near complete — minor items remain  
 **Last nmap**: 18:17 UTC, 22 Feb 2026
 
@@ -76,19 +76,27 @@ Day 1 migrated 28 devices to target IPs. Day 2 completed HA integration verifica
 - [ ] Check Deco reservation is intact for this MAC → .82
 - [ ] Power cycle the Shelly to force DHCP renewal
 
-### Printer Deco Reservation
-- [ ] Update .41 reservation from old WiFi MAC (28:56:5A:74:D9:26) to wired MAC (30:05:5C:EB:F2:3C)
-- [ ] Disable WiFi on the printer
+### Printer Deco Reservation — COMPLETED 23 Feb 2026
+- [x] Updated .41 reservation to wired MAC (30:05:5C:EB:F2:3C) ✅
 
 ### Mystery Devices
-- **58:BF:25:46:D6:52** (Espressif) at .150 — possibly backup Sonoff immersion
-  - [ ] Check web UI at `http://192.168.1.150`
+- **58:BF:25:46:D6:52** (Espressif/ESP32) at .150 — no web UI on port 80, very sleepy (32% packet loss, high latency variance). Behaviour consistent with battery-powered sensor.
+  - [ ] Physical hunt to locate device
+  - [ ] Run `nmap -Pn -sV -p 1-1000 192.168.1.150` when device is awake
   - [ ] Identify and assign to correct band or decommission
 - **4C:75:25:20:2C:21** — reserved in Deco, unknown
   - [ ] Identify or remove reservation
-- **ShellyHTG3 x2** (54:32:04:57:B1:D0 and 54:32:04:57:9B:B4) — humidity/temperature sensors
-  - [ ] Get locations from HA
-  - [ ] Assign to HVAC range (.65, .66)
+
+### Shelly HTG3 H&T Sensors (×5) — IDENTIFIED 23 Feb 2026
+All five humidity/temperature sensors now identified by MAC and location:
+| MAC | Location |
+|---|---|
+| B0:81:84:EE:8D:DC | Bedroom |
+| 54:32:04:57:9B:B4 | Living Room |
+| B0:81:84:EE:81:88 | Office |
+| 54:32:04:57:B1:D0 | Study |
+| 80:B5:4E:34:3D:D4 | Porch |
+- [ ] Decision pending: assign DHCP reservations in HVAC range (.65-.69) or leave in DHCP pool (sensors sleep between updates)
 
 ### NAS Home Assistant Integration (.42)
 - [ ] Enable WOL in ASUSTOR ADM (Power > Wake-on-LAN)
@@ -98,9 +106,28 @@ Day 1 migrated 28 devices to target IPs. Day 2 completed HA integration verifica
 - [ ] Create combined switch entity (WOL on / SSH off / ping state)
 
 ### Documentation
-- [ ] Update inventory spreadsheet with all final IPs and new devices
-- [ ] Backfill placeholder reservations to prevent DHCP squatting
+- [ ] Update inventory spreadsheet with all final IPs, new devices, and H&T sensors
 - [ ] Consider Hikvision firmware update to latest (V2.2.100 or V2.2.108) when stable
+
+### DHCP Scheme Revision — PLANNED
+Restructure to separate open DHCP pool from reservations:
+- **.1–.19** — Infrastructure (stays as-is)
+- **.20–.49** — Open DHCP pool (new devices land here automatically)
+- **.50–.250** — Reservations only (functional banding)
+
+Devices to move out of .20-.49 range:
+| Current IP | Device | Notes |
+|---|---|---|
+| .20 | Home Assistant | → .50+ |
+| .23 | Android Tablet | → .50+ |
+| .30 | Hikvision Door Station | → .50+ |
+| .31 | Hikvision Indoor Lounge | → .50+ (static via SADP) |
+| .32 | Hikvision Indoor Office | → .50+ (static via SADP) |
+| .40 | Yealink W70B | → .50+ |
+| .41 | Brother Printer | → .50+ |
+| .42 | ASUSTOR NAS | → .50+ |
+
+This is a dedicated session — requires same careful approach as initial migration.
 
 ---
 
@@ -185,9 +212,11 @@ Day 1 migrated 28 devices to target IPs. Day 2 completed HA integration verifica
 |---|---|
 | Devices at target IPs | 33 |
 | New devices added (Day 2) | 3 (NAS, Switch, Tablet) |
+| H&T sensors identified (Day 3) | 5 (Bedroom, Living Room, Office, Study, Porch) |
 | HA integrations verified | All except dehumidifier + UFH |
 | Firmware updates completed | 4 (Deco, Porch Shelly, 2× Hikvision indoor) |
-| Remaining items | 7 (minor housekeeping) |
+| Mystery devices remaining | 2 (ESP32 at .150, unknown Deco reservation) |
+| Remaining items | 6 (dehumidifier, loft lights, mystery devices, H&T reservations, scheme revision, inventory) |
 
 ---
 

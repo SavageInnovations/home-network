@@ -36,6 +36,7 @@ Samsung TVs, Sky Puck, and PS4 could theoretically go on the Deco IoT SSID, but 
 |---|---|---|
 | Home Assistant | Hub + Voice satellite | Core controller |
 | Shelly Gen4 | 6× 1PM, 1× 2PM | Local HTTP, BLE gateways |
+| Shelly HTG3 | 5× H&T sensors | DHCP (sleep between updates) |
 | Tapo | 3× P304M strips, 1× strip, 1× plug | Local via HA integration |
 | Sonoff | 1× immersion controller (+1 backup) | eWeLink / HA |
 | Tuya | Dehumidifier, UFH controller | Tuya cloud / HA |
@@ -49,12 +50,15 @@ Samsung TVs, Sky Puck, and PS4 could theoretically go on the Deco IoT SSID, but 
 - HA remote access via Nabu Casa cloud relay (no direct exposure)
 - DHCP reservations for all fixed devices
 
-### Known Issues (see migration plan)
-- Brother printer: FTP, Telnet, SMTP open
-- Windows PC: RDP and SMB exposed
-- Hikvision: historical CVEs, firmware currency TBC
+### Known Issues (see punch list)
+- Windows PC: RDP and SMB exposed — verify intentional
 - Shelly devices: no authentication (acceptable on home LAN)
 - Tapo strips powering critical infrastructure (mesh node, doorbell PoE)
+- Mystery ESP32 device at .150 — unidentified
+
+### Resolved (Migration Days 1-2)
+- ~~Brother printer: FTP, Telnet, SMTP open~~ — confirmed already disabled
+- ~~Hikvision: firmware currency TBC~~ — updated to V2.2.92
 
 ## Future Considerations
 - **Local DNS**: Pi-hole or AdGuard Home for ad-blocking and local name resolution
